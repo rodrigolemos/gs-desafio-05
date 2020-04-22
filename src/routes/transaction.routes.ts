@@ -22,13 +22,7 @@ transactionRouter.post('/', (request, response) => {
   try {
     const { title, value, type } = request.body;
 
-    if (type === 'outcome') {
-      const balance = transactionsRepository.getBalance();
-
-      if (balance.total < value) {
-        throw Error('Invalid value');
-      }
-    }
+    const balance = transactionsRepository.getBalance();
 
     const createTransaction = new CreateTransactionService(
       transactionsRepository,
@@ -38,6 +32,7 @@ transactionRouter.post('/', (request, response) => {
       title,
       value,
       type,
+      balance: balance.total,
     });
 
     return response.json(transaction);
